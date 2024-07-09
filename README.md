@@ -1,5 +1,4 @@
-```markdown
-# 学者文章提取器
+# 思想提取器 MindSniper
 
 这是一个简单的Flask Web应用，用于从`爱思想`网站上抓取特定学者的所有文章，并将其保存为Markdown文件。
 
@@ -85,28 +84,4 @@ scholar-article-scraper/
 ## 许可证
 
 此项目使用MIT许可证。详情请参阅LICENSE文件。
-```
 
-### requirements.txt
-
-确保在项目根目录下创建一个`requirements.txt`文件，内容如下：
-
-```
-Flask
-requests
-beautifulsoup4
-```
-
-### 完整项目结构
-
-```
-scholar-article-scraper/
-│
-├── app.py                 # Flask应用的主文件
-├── requirements.txt       # Python依赖包
-├── templates/
-│   └── index.html         # 前端HTML模板
-└── README.md              # 项目说明文件
-```
-
-把这些文件和目录放在一起并提交到你的GitHub仓库中。
