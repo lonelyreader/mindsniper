@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>思想提取器</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #4ca1af);
+            color: #ecf0f1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: rgba(44, 62, 80, 0.85);
+            padding: 20px 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #34495e;
+            border-radius: 5px;
+            background-color: #34495e;
+            color: #ecf0f1;
+            font-size: 1em;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 1em;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+
+        #message {
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>思想提取器</h1>
+        <form id="authorForm">
+            <label for="author">输入学者姓名拼音:</label>
+            <input type="text" id="author" name="author" required>
+            <input type="submit" value="抓取文章">
+        </form>
+        <div id="message"></div>
+    </div>
+    <script>
+        document.getElementById('authorForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var author = document.getElementById('author').value;
+            fetch('/download', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ author: author })
+            })
+                .then(response => {
+                    if (response.status === 200) {
+                        response.blob().then(blob => {
+                            const url = window.URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.style.display = 'none';
+                            a.href = url;
+                            a.download = `${author}.md`;
+                            document.body.appendChild(a);
+                            a.click();
+                            window.URL.revokeObjectURL(url);
+                        });
+                        document.getElementById('message').innerText = "文章抓取成功！文件正在下载...";
+                    } else {
+                        document.getElementById('message').innerText = "抓取失败，请确认学者姓名拼音是否正确。";
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('message').innerText = "发生错误，请重试。";
+                    console.error('Error:', error);
+                });
+        });
+    </script>
+</body>
+
+</html>
